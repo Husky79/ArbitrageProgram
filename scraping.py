@@ -33,17 +33,17 @@ def get_info_box(url):
     for index, row in enumerate(info_rows):
         if index == 0:
             movie_info['title'] = row.find("th").get_text(" ", strip=True)
-        elif index == 1:
-            continue
         else:
-            content_key = row.find("th").get_text(" ", strip=True)
-            content_value = get_content_value(row.find("td"))
-            movie_info[content_key] = content_value
+            header = row.find("th")
+            if header:
+                content_key = row.find("th").get_text(" ", strip=True)
+                content_value = get_content_value(row.find("td"))
+                movie_info[content_key] = content_value
 
     return movie_info
 
-print(get_info_box("https://en.wikipedia.org/wiki/Davy_Crockett_and_the_River_Pirates"))
-'''
+#print(get_info_box("https://en.wikipedia.org/wiki/One_Little_Indian_(film)"))
+
 r2 = requests.get("https://en.wikipedia.org/wiki/List_of_Walt_Disney_Pictures_films")
 
 #convert to beautiful soup object
@@ -81,7 +81,6 @@ def load_data(title):
         return json.load(f)
 
 save_data("disney_data.json", movie_info_list)
-'''
 
 
 
