@@ -8,9 +8,14 @@ import json
 def get_content_value(row_data):
     if row_data.find("li"):
         return [li.get_text(" ", strip =True).replace("\xa0"," ") for li in row_data.find_all("li")]
+    elif row_data.find("br"):
+        return [text for text in row_data.stripped_strings]
     else:
         return row_data.get_text(" ", strip =True).replace("\xa0"," ")
 
+def clean_tags(soup):
+    for tag in soup.find_all(["sup","span"]):
+        tag.decompose()
 
 def get_info_box(url):
     r = requests.get(url)
@@ -21,6 +26,9 @@ def get_info_box(url):
     # get just the info_box of page
     info_box = soup.find(class_="infobox vevent")
     info_rows = info_box.find_all("tr")
+
+    clean_tags(soup)
+
     movie_info = {}
     for index, row in enumerate(info_rows):
         if index == 0:
@@ -34,6 +42,8 @@ def get_info_box(url):
 
     return movie_info
 
+print(get_info_box("https://en.wikipedia.org/wiki/Davy_Crockett_and_the_River_Pirates"))
+'''
 r2 = requests.get("https://en.wikipedia.org/wiki/List_of_Walt_Disney_Pictures_films")
 
 #convert to beautiful soup object
@@ -71,8 +81,7 @@ def load_data(title):
         return json.load(f)
 
 save_data("disney_data.json", movie_info_list)
-
-
+'''
 
 
 
